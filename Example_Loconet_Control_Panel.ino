@@ -128,6 +128,9 @@ void loop() {
     // done with our "local" logic, now we need to check for any loconet packets that might
     // influence our control panel, such as when someone else throws the turnout from a throttle.
     // We want to catch these events so the LED follows the turnout's true state
+    
+    // Check for any received LocoNet packets
+    LnPacket = LocoNet.receive() ;
     if( LnPacket ) {   
         LocoNet.processSwitchSensorMessage(LnPacket);
         // this function will call the specially named functions below...
