@@ -1,5 +1,6 @@
 /*
  *  Loconet Control Panel - simple demo
+ *  2014 John Plocher - MIT License
  *
  *  Circuit:
  *    Loconet on pins 8 (RX) and 7 (TX) (via a LocoShield or similar)
@@ -19,12 +20,25 @@
 
 #include <LocoNet.h>
 
-#define LED_PIN      13
-#define LN_RX_PIN     8  // Hardcoded in library for UNO.  Will not work with Leonardo or Mega (yet)
+//  pick one board type:
+//#define BOARD_MEGA
+//#define BOARD_UNO
+#define BOARD_UNO_LOCOSHIELD
+
+#if defined( BOARD_MEGA )   // MEGA
+#define LN_TX_PIN     47
+#elif defined( BOARD_UNO )  // UNO
+#define LN_TX_PIN     6
+#elif defined( BOARD_UNO_LOCOSHIELD )  // UNO with LocoShield (Tx on D7)
 #define LN_TX_PIN     7
+#else
+#error("UNKNOWN BOARD");
+#endif
+//      LN_RX_PIN     Hardcoded in library for UNO and MEGA.  Will not work with Leonardo (yet)
+
+#define LED_PIN      13
 #define N_BUTTON_PIN  6
 #define D_BUTTON_PIN  5
-
 #define LN_TURNOUT   25
 
 // Loconet turnout position definitions
@@ -83,14 +97,14 @@ void loop() {
     
     // identical readings mean we have a good result
     if (nbit1 == nbit2) {        // Was "N"ormal pushbutton pressed?
-        if (nbit1 == HIGH) {
+        if (nbit1 == LOW) {
             nbutton = 1;
         } else {
             nbutton = 0;
         }
     }
     if (dbit1 == dbit2) {        // Was "D"iverging pushbutton pressed?
-        if (dbit1 == HIGH) {
+        if (dbit1 == LOW) {
             dbutton = 1;
         } else {
             dbutton = 0;
